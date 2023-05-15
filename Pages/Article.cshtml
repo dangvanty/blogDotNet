@@ -1,0 +1,13 @@
+﻿@page
+@model Razor9_identity.Pages.ArticleModel
+@using Razor9_identity.Models
+@{
+  ViewData["Title"] = "Trang báo";
+  var post = ViewData["posts"] as List<Article>;
+}
+
+@foreach (var item in post)
+{
+  <p class="alert alert-info">@item.Id ------- @item.Title</p>
+  <hr>
+}
