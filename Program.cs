@@ -3,8 +3,18 @@ using Pomelo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
+using blogDotNet.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Razor9_identity.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("Razor9_identityIdentityDbContextConnection") ?? throw new InvalidOperationException("Connection string 'Razor9_identityIdentityDbContextConnection' not found.");
+
+// add option -- them service sendmail 
+builder.Services.AddOptions();
+var mailSettingsUrl= builder.Configuration.GetSection("MailSettings");
+builder.Services.Configure<MailServiceSettings>(mailSettingsUrl);
+builder.Services.AddSingleton<IEmailSender,SendMailServices>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -12,14 +22,15 @@ var connectString = builder.Configuration.GetSection("ConnectionStrings")["MyBlo
 builder.Services.AddDbContext<MyBlogContext>(options => options.UseMySQL(connectString)); 
 
 
+
 // đăng ký identity   
-// builder.Services.AddIdentity<AppUser,IdentityRole>()
+builder.Services.AddIdentity<AppUser,IdentityRole>()
+        .AddEntityFrameworkStores<MyBlogContext>()
+        .AddDefaultTokenProviders(); // Thêm Token Provider - nó sử dụng để phát sinh token (reset password, confirm email ...)
+// cái dưới sử dụng identity ui
+// builder.Services.AddDefaultIdentity<AppUser>()
 //         .AddEntityFrameworkStores<MyBlogContext>()
 //         .AddDefaultTokenProviders();
-// cái dưới sử dụng identity ui
-builder.Services.AddDefaultIdentity<AppUser>()
-        .AddEntityFrameworkStores<MyBlogContext>()
-        .AddDefaultTokenProviders();
 
 
 // Truy cập IdentityOptions
@@ -45,6 +56,7 @@ builder.Services.Configure<IdentityOptions> (options => {
     // Cấu hình đăng nhập.
     options.SignIn.RequireConfirmedEmail = true;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
     options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
+    options.SignIn.RequireConfirmedAccount=true;
 
 });
 var app = builder.Build();

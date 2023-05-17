@@ -10,8 +10,8 @@ namespace Razor9_identity.Models
 {
     public class AppUser :IdentityUser
     {
-        [Column(TypeName ="nvarchar")]
-        [StringLength(400)]
-       public string HomeAddress {set;get;}
+    //     [Column(TypeName ="nvarchar")]
+    //     [StringLength(400)]
+    //    public string HomeAddress {set;get;}
     }
 }

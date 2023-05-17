@@ -11,8 +11,8 @@ using Razor9_identity.Models;
 namespace Razor9_identity.Migrations
 {
     [DbContext(typeof(MyBlogContext))]
-    [Migration("20230515164646_initIdentity")]
-    partial class initIdentity
+    [Migration("20230517151451_initdb")]
+    partial class initdb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
