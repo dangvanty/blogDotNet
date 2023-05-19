@@ -232,7 +232,7 @@ namespace Razor9_identity.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("articles");
+                    b.ToTable("articles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

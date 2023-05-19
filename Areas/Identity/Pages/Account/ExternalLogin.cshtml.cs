@@ -99,6 +99,7 @@ namespace Razor9_identity.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
+            return Content("Dung lai o day");
             returnUrl = returnUrl ?? Url.Content("~/");
             if (remoteError != null)
             {

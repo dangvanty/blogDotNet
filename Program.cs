@@ -5,16 +5,26 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using blogDotNet.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Razor9_identity.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("Razor9_identityIdentityDbContextConnection") ?? throw new InvalidOperationException("Connection string 'Razor9_identityIdentityDbContextConnection' not found.");
 
 // add option -- them service sendmail 
 builder.Services.AddOptions();
 var mailSettingsUrl= builder.Configuration.GetSection("MailSettings");
 builder.Services.Configure<MailServiceSettings>(mailSettingsUrl);
 builder.Services.AddSingleton<IEmailSender,SendMailServices>();
+
+// Eject dang nhap bang google:
+builder.Services.AddAuthentication()
+        .AddGoogle(googleOptions=>{
+            // doc thong tin authentication: google tu appsettings.json
+            var googleAuthSection = builder.Configuration.GetSection("Authentication:Google");
+            googleOptions.ClientId= googleAuthSection["ClientID"];
+            googleOptions.ClientSecret = googleAuthSection["Clientsecret"];
+
+            // Cau hinh Url callback lai tu google(khong thiet lap thi ma dinh la signin-google)
+            googleOptions.CallbackPath = "/dang-nhap-tu-google";
+        });
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -59,6 +69,8 @@ builder.Services.Configure<IdentityOptions> (options => {
     options.SignIn.RequireConfirmedAccount=true;
 
 });
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
